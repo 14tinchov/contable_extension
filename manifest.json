@@ -2,7 +2,7 @@
   "name": "Contable data",
   "version": "1.0",
   "description": "Para cargar datos desde contable",
-  "permissions": ["activeTab", "tabs"],
+  "permissions": ["activeTab", "tabs", "storage"],
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -11,6 +11,9 @@
       "48": "images/get_started48.png",
       "128": "images/get_started128.png"
     }
+  },
+  "background": {
+    "scripts": ["popup.js"]
   },
   "content_scripts": [ {
     "js": [ "jquery.min.js", "content.js"],

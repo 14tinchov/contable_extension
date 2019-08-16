@@ -1,17 +1,7 @@
-'use strict';
-
-$(document).ready(function(){
-  $('#js-contable-button').on('click', function(){
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, {"message": "is_sii_page"});
-    });
-  });
-})
-
 //Returns messages
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
+    // change to switch an case
     if( request.message === "is_sii_page" ) {
       if(!request.sii_page){
         chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
@@ -19,9 +9,9 @@ chrome.runtime.onMessage.addListener(
             // add listener so callback executes only if page loaded. otherwise calls instantly
             var listener = function(tabId, changeInfo, tab) {
               if (tabId == tab1.id && changeInfo.status === 'complete') {
-                  chrome.tabs.onUpdated.removeListener(listener);
-                  chrome.tabs.sendMessage(tab1.id, {"message": "is_logged_in"});
-                  // remove listener, so only run once
+                chrome.tabs.onUpdated.removeListener(listener);
+                chrome.tabs.sendMessage(tab1.id, {"message": "is_logged_in"});
+                // remove listener, so only run once
               }
             }
             chrome.tabs.onUpdated.addListener(listener);
@@ -36,13 +26,17 @@ chrome.runtime.onMessage.addListener(
     } else if( request.message === "is_logged_in" ) {
       if(request.isLoginPage){
         console.log("!request.isLoginPage");
-        var siiUsername = $("#js-contable-username").val();
-        var siiPassword = $("#js-contable-password").val();
         chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
           var activeTab = tabs[0];
-          chrome.tabs.sendMessage(activeTab.id, {"message": "login_with_credentials", "username": siiUsername, "password": siiPassword});
+          chrome.tabs.sendMessage(activeTab.id, {"message": "login_with_credentials"});
         });
       }
+    } else if( request.message === "change_propuestaf" ) {
+      console.log("change_page_to_zeus");
+      chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
+        chrome.tabs.update(tab.id, { url: "https://www4.sii.cl/propuestaf29ui/index.html#/default"}, function(tab1){
+        });
+      });
     } else if( request.message === "change_page_to_zeus" ) {
       console.log("change_page_to_zeus");
       chrome.tabs.query({currentWindow: true, active: true}, function (tab) {
